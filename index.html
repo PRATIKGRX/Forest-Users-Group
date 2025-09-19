@@ -20,7 +20,9 @@
         background-color: #f9f9f9;
       }
 
-      h2, h3, h4 {
+      h2,
+      h3,
+      h4 {
         margin-bottom: 10px;
       }
 
@@ -43,7 +45,7 @@
         background: white;
         padding: 30px;
         border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       label {
@@ -82,7 +84,8 @@
         margin: 20px 0;
       }
 
-      th, td {
+      th,
+      td {
         border: 1px solid #ddd;
         padding: 12px;
         text-align: center;
@@ -160,7 +163,8 @@
           font-size: 14px;
         }
 
-        th, td {
+        th,
+        td {
           padding: 8px;
         }
 
@@ -187,7 +191,8 @@
           font-size: 12px;
         }
 
-        th, td {
+        th,
+        td {
           padding: 6px;
         }
 
@@ -210,12 +215,15 @@
     <p>Ratnanagar Municipality - 7, Manohara, Chitwan</p>
     <h3>User Survey Form</h3>
 
-    <form action="https://script.google.com/macros/s/AKfycbz0pceLUrm6ljDLRk9ZwIUdZAny0O4eUd7YU-n8zcZH25vChRqKmD3tV5o1JDSOd1PVXg/exec" method="POST">
-      <label>Date: <input type="date" name="date" /></label><br /><br />
-      <label
-        >Head of Household: <input type="text" name="householdhead"
-      /></label>
-      <label>Card No: <input type="text" name="cardno" /></label><br /><br />
+    <form id="surveyForm">
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" /><br /><br />
+
+      <label for="householdhead">Head of Household:</label>
+      <input type="text" id="householdhead" name="householdhead" />
+
+      <label for="cardno">Card No:</label>
+      <input type="text" id="cardno" name="cardno" /><br /><br />
 
       <h4>A) Family Details</h4>
       <table border="1" cellpadding="5">
@@ -229,7 +237,7 @@
           <td>1</td>
           <td><input type="text" name="fname" /></td>
           <td>
-            <select name="fgender" id="">
+            <select name="fgender">
               <option value="" selected disabled>Select</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -242,39 +250,90 @@
       <br />
 
       <h4>B) Household Information</h4>
-      <p>
-        Number of Women: <input type="number" name="women" /> Number of Men:
-        <input type="number" name="men" />
-      </p>
-      <p>
-        House Type: Kachhi
-        <input type="radio" name="housetype" value="kachhi" /> Pakki
-        <input type="radio" name="housetype" value="pakki" />
-      </p>
+      <label for="women">Number of Women:</label>
+      <input type="number" id="women" name="women" />
+      <label for="men">Number of Men:</label>
+      <input type="number" id="men" name="men" /><br /><br />
+
+      <span>House Type:</span>
+      <input type="radio" id="kachhi" name="housetype" value="kachhi" />
+      <label for="kachhi">Kachhi</label>
+      <input type="radio" id="pakki" name="housetype" value="pakki" />
+      <label for="pakki">Pakki</label><br /><br />
 
       <h4>C) Household Assets</h4>
-      <p>
-        Mobile <input type="number" name="mobile" /> Cycle
-        <input type="number" name="cycle" /> TV
-        <input type="number" name="tv" />
-      </p>
+      <label for="mobile">Mobile:</label>
+      <input type="number" id="mobile" name="mobile" />
+      <label for="cycle">Cycle:</label>
+      <input type="number" id="cycle" name="cycle" />
+      <label for="tv">TV:</label>
+      <input type="number" id="tv" name="tv" /><br /><br />
 
       <h4>D) Source of Income</h4>
-      <p>
-        <input type="hidden" name="agriculture" value="no" />
-        Agriculture <input type="checkbox" name="agriculture" value="yes" />
-        <input type="hidden" name="business" value="no" />
-        Business <input type="checkbox" name="business" value="yes" />
-      </p>
-      <p>
-        Satisfied with services? Yes
-        <input type="radio" name="satisfied" value="yes" /> No
-        <input type="radio" name="satisfied" value="no" />
-      </p>
+      <input type="hidden" name="agriculture" value="no" />
+      <input type="checkbox" id="agriculture" name="agriculture" value="yes" />
+      <label for="agriculture">Agriculture</label>
 
-      <br />
+      <input type="hidden" name="business" value="no" />
+      <input type="checkbox" id="business" name="business" value="yes" />
+      <label for="business">Business</label><br /><br />
+
+      <span>Satisfied with services?</span>
+      <input type="radio" id="satisfied_yes" name="satisfied" value="yes" />
+      <label for="satisfied_yes">Yes</label>
+      <input type="radio" id="satisfied_no" name="satisfied" value="no" />
+      <label for="satisfied_no">No</label><br /><br />
+
       <button type="submit">Submit</button>
       <button type="reset">Reset</button>
     </form>
+    <!-- Loader element -->
+    <div
+      id="loader"
+      style="display: none; color: blue; font-weight: bold; margin-top: 10px"
+    >
+      Submitting, please wait...
+    </div>
+
+    <script>
+      const form = document.getElementById("surveyForm");
+      const loader = document.getElementById("loader");
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent normal submit
+
+        loader.style.display = "block"; // Show loader
+        submitBtn.disabled = true; // Disable submit button
+        submitBtn.style.opacity = 0.6; // Optional: make it look disabled
+
+        setTimeout(() => {
+          const data = new FormData(form);
+
+          fetch(
+            "https://script.google.com/macros/s/AKfycbz0pceLUrm6ljDLRk9ZwIUdZAny0O4eUd7YU-n8zcZH25vChRqKmD3tV5o1JDSOd1PVXg/exec",
+            {
+              method: "POST",
+              body: data,
+            }
+          )
+            .then((response) => response.text())
+            .then((text) => {
+              loader.style.display = "none"; // Hide loader
+              submitBtn.disabled = false; // Re-enable submit button
+              submitBtn.style.opacity = 1;
+              alert("Form submitted successfully!");
+              form.reset(); // Optional: reset form
+            })
+            .catch((error) => {
+              loader.style.display = "none"; // Hide loader
+              submitBtn.disabled = false; // Re-enable submit button
+              submitBtn.style.opacity = 1;
+              alert("Error submitting form. Please try again.");
+              console.error(error);
+            });
+        }, 100); // small delay ensures loader renders
+      });
+    </script>
   </body>
 </html>
